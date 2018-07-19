@@ -22,7 +22,6 @@
     "lodash": "^4.17.10",
     "mongodb": "^3.1.1",
     "mongoose": "^5.2.4",
-    "notarealdb": "0.2.2",
     "validator": "^10.4.0"
   },
   "devDependencies": {
