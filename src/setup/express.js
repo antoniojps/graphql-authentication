@@ -1,29 +1,28 @@
 import express from 'express'
 import {
-  bodyParser,
   cors,
   authenticate,
   handleAuthError,
 } from './../middleware/middleware'
-import schema from './../graphql/schema'
-import { graphqlExpress, graphiqlExpress } from 'apollo-server-express'
+import typeDefs from './../graphql/typeDefs'
+import resolvers from './../graphql/resolvers'
+import { ApolloServer } from 'apollo-server-express'
 
 const app = express()
 
-app.use(cors(), bodyParser.json(), authenticate, handleAuthError)
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  context: ({ req }) => {
+    // todo: get user roles from db and add to user obj
+    return { user: req.user }
+  },
+})
 
-app.use(
-  '/graphql',
-  graphqlExpress(req => ({
-    schema,
-    context: {
-      user: req.user,
-    },
-  }))
-)
+app.use(cors(), authenticate, handleAuthError)
 
-app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }))
+server.applyMiddleware({ app })
 
-app.listen(process.env.PORT, () =>
+app.listen({ port: process.env.PORT }, () =>
   console.info(`Server started on port ${process.env.PORT}`)
 )
