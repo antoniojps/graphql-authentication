@@ -6,20 +6,16 @@ const typeDefs = gql`
     users: [User]
   }
 
-  type Mutation {
-    signup(input: signupInput): User
-  }
-
   type User {
     _id: ID!
     email: String
-    password: String
-    token: String
+    username: String
+    providers: [Provider]
   }
 
-  input signupInput {
-    email: String!
-    password: String!
+  type Provider {
+    provider: String
+    id: ID
   }
 `
 

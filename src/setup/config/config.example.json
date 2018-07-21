@@ -2,11 +2,16 @@
   "test": {
     "PORT": 3000,
     "MONGODB_URI": "mongodb://localhost:27017/PubgAppTest",
-    "JWT_SECRET": "ohthisissosecret123"
+    "JWT_SECRET": "ohthisissosecret123",
+    "JWT_AUDIENCE": "authentication-server",
+    "JWT_ISSUER": "authentication-server"
   },
   "development": {
     "PORT": 3000,
     "MONGODB_URI": "mongodb://localhost:27017/PubgApp",
-    "JWT_SECRET": "ohthisisevenmoresecret"
+    "JWT_SECRET": "ohthisisevenmoresecret",
+    "JWT_AUDIENCE": "authentication-server",
+    "JWT_ISSUER": "authentication-server"
   }
+}
 }

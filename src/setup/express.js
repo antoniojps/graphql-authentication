@@ -1,8 +1,9 @@
 import express from 'express'
-import { cors, authenticate, handleAuthError } from './../middleware/middleware'
+import { cors, authenticate, handleAuthError, passport } from './../middleware/middleware'
 import typeDefs from './../graphql/typeDefs'
 import resolvers from './../graphql/resolvers'
 import { ApolloServer } from 'apollo-server-express'
+import authRoutes from './routes/authentication'
 
 function setupGraphQL () {
   return new ApolloServer({
@@ -23,12 +24,22 @@ function setupParsers (app) {
   app.use(authenticate, handleAuthError)
 }
 
+function setupPassport (app) {
+  app.use(passport.initialize())
+}
+
+function setupAuthentication (app) {
+  app.use('/auth', authRoutes)
+}
+
 function setupExpress () {
   const app = express()
 
   // express middleware
   setupCors(app)
   setupParsers(app)
+  setupPassport(app)
+  setupAuthentication(app)
 
   // graphQL
   const server = setupGraphQL()

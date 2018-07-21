@@ -1,6 +1,5 @@
 import mongoose from 'mongoose'
 import validator from 'validator'
-import bcrypt from 'bcryptjs'
 import jsonwebtoken from 'jsonwebtoken'
 import _ from 'lodash'
 
@@ -18,24 +17,47 @@ const UserSchema = mongoose.Schema({
       message: '{VALUE} is not a valid email',
     },
   },
-  password: {
+  username: {
     type: String,
-    require: true,
-    minlength: 6,
+    trim: true,
+    unique: true,
+    sparse: true,
+  },
+  providers: {
+    type: [
+      {
+        provider: {
+          type: String,
+        },
+        id: {
+          type: String,
+        },
+      },
+    ],
   },
 })
 
 // model methods
 UserSchema.statics = {
-  findByCredentials (email, password) {
-    return User.findOne({ email }).then(async user => {
-      if (!user) return Promise.reject(new Error('user invalid'))
-      const isPasswordCorrect = await bcrypt.compare(password, user.password)
-      if (!isPasswordCorrect) {
-        return Promise.reject(new Error('user password incorrect'))
-      }
-      return user
+  findByExternalID (provider, id) {
+    return User.findOne({
+      providers: {
+        $elemMatch: { provider, id },
+      },
     })
+  },
+  createUser (provider, profile) {
+    const newUser = {
+      email: profile.emails[0].value,
+      providers: [
+        {
+          provider,
+          id: profile.id,
+        },
+      ],
+    }
+    const user = new User(newUser)
+    return user.save()
   },
 }
 
@@ -48,29 +70,15 @@ UserSchema.methods = {
 
   generateAuthToken () {
     const token = jsonwebtoken
-      .sign({ _id: this._id.toHexString() }, process.env.JWT_SECRET)
+      .sign({}, process.env.JWT_SECRET, {
+        expiresIn: '24h',
+        audience: process.env.JWT_AUDIENCE,
+        issuer: process.env.JWT_ISSUER,
+        subject: this._id.toHexString(),
+      })
       .toString()
     return token
   },
-}
-
-// middleware
-UserSchema.pre('save', async function (next) {
-  if (this.isModified('password')) {
-    this.password = await encryptPassword(this.password)
-    next()
-  }
-  next()
-})
-
-async function encryptPassword (password) {
-  try {
-    const salt = await bcrypt.genSalt(10)
-    const hashPassword = await bcrypt.hash(password, salt)
-    return hashPassword
-  } catch (e) {
-    return e
-  }
 }
 
 // model

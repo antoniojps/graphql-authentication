@@ -5,6 +5,18 @@ import jsonwebtoken from 'jsonwebtoken'
 const userOneID = new ObjectID()
 const userTwoID = new ObjectID()
 
+function generateAuthToken (id) {
+  const token = jsonwebtoken
+    .sign({}, process.env.JWT_SECRET, {
+      expiresIn: '24h',
+      audience: process.env.JWT_AUDIENCE,
+      issuer: process.env.JWT_ISSUER,
+      subject: id,
+    })
+    .toString()
+  return token
+}
+
 export const defaultUsers = [
   {
     _id: userOneID,
@@ -19,8 +31,8 @@ export const defaultUsers = [
 ]
 
 export const usersTokens = [
-  jsonwebtoken.sign({ _id: userOneID }, process.env.JWT_SECRET).toString(),
-  jsonwebtoken.sign({ _id: userTwoID }, process.env.JWT_SECRET).toString(),
+  generateAuthToken(defaultUsers[0]._id.toHexString()),
+  generateAuthToken(defaultUsers[1]._id.toHexString()),
 ]
 
 export const populateUsers = done => {
