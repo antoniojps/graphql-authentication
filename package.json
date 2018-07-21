@@ -1,5 +1,5 @@
 {
-  "name": "job-board-server",
+  "name": "authentication-server",
   "private": true,
   "license": "MIT",
   "scripts": {
@@ -7,7 +7,9 @@
     "clean": "rm -rf build && mkdir build",
     "build": "cross-env NODE_ENV=production npm run clean && babel -d ./build ./src -s --copy-files",
     "start": "cross-env NODE_ENV=development && node server.js",
-    "eslint": "eslint src"
+    "eslint": "eslint src",
+    "test": "cross-env NODE_ENV=test mocha --require babel-core/register src/tests/*.test.js",
+    "test-watch": "nodemon --exec 'npm test'"
   },
   "dependencies": {
     "apollo-server-express": "^2.0.0",
@@ -39,6 +41,9 @@
     "eslint-plugin-node": "^6.0.0",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
-    "nodemon": "^1.11.0"
+    "expect": "^23.4.0",
+    "mocha": "^5.2.0",
+    "nodemon": "^1.11.0",
+    "supertest": "^3.1.0"
   }
 }

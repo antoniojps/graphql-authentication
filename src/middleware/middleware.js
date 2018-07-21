@@ -1,4 +1,3 @@
-import bodyParser from 'body-parser'
 import cors from 'cors'
 import jwt from 'express-jwt'
 
@@ -13,7 +12,6 @@ const handleAuthError = (err, req, res, next) => {
 }
 
 export {
-  bodyParser,
   cors,
   authenticate,
   handleAuthError,

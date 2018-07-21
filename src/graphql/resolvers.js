@@ -5,7 +5,7 @@ import {
 import User from './../models/user'
 
 const Query = {
-  users: (root, { input }, { user }) => {
+  users: (root, args, { user }) => {
     // todo: set up user roles
     if (!user) throw new AuthenticationError('Unauthorized')
     return User.find()

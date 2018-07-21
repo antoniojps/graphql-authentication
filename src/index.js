@@ -1,3 +1,9 @@
-import './setup/config'
-import './setup/database'
-import './setup/express'
+import setupDatabase from './setup/database'
+import setupExpress from './setup/express'
+
+function main () {
+  setupDatabase()
+  setupExpress()
+}
+
+main()
