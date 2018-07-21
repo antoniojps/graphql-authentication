@@ -4,14 +4,17 @@
     "MONGODB_URI": "mongodb://localhost:27017/PubgAppTest",
     "JWT_SECRET": "ohthisissosecret123",
     "JWT_AUDIENCE": "authentication-server",
-    "JWT_ISSUER": "authentication-server"
+    "JWT_ISSUER": "authentication-server",
+    "GOOGLE_CLIENTID": "REPLACEclientID",
+    "GOOGLE_CLIENTSECRET": "REPLACEyourGoogleSecret"
   },
   "development": {
     "PORT": 3000,
     "MONGODB_URI": "mongodb://localhost:27017/PubgApp",
     "JWT_SECRET": "ohthisisevenmoresecret",
     "JWT_AUDIENCE": "authentication-server",
-    "JWT_ISSUER": "authentication-server"
+    "JWT_ISSUER": "authentication-server",
+    "GOOGLE_CLIENTID": "REPLACEclientID",
+    "GOOGLE_CLIENTSECRET": "REPLACEyourGoogleSecret"
   }
-}
 }

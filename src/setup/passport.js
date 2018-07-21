@@ -4,9 +4,8 @@ import User from './../models/user'
 
 const passportConfig = {
   callbackURL: '/auth/google/redirect',
-  clientID:
-    '32006896534-tlihspvefscesq8er14vpq55dvat62po.apps.googleusercontent.com',
-  clientSecret: 'FJSSEAj-ypkPuc73JPmCN1D9',
+  clientID: process.env.GOOGLE_CLIENTID,
+  clientSecret: process.env.GOOGLE_CLIENTSECRET,
 }
 
 const provider = 'google'
