@@ -10,25 +10,28 @@ const passportConfig = {
 
 const provider = 'google'
 
-if (passportConfig.clientID) {
-  passport.use(
-    new passportGoogle.OAuth2Strategy(passportConfig, async function (
-      request,
-      accessToken,
-      refreshToken,
-      profile,
-      done
-    ) {
-      let user = await User.findByExternalID(provider, profile.id)
-      // if no user register
-      if (!user) {
-        user = await User.createUser(provider, profile)
-        console.log('created new user')
-      }
-
-      const token = user.generateAuthToken()
-
-      return done(null, { user, token })
-    })
-  )
+export default function () {
+  if (passportConfig.clientID) {
+    passport.use(
+      new passportGoogle.OAuth2Strategy(passportConfig, async function (
+        request,
+        accessToken,
+        refreshToken,
+        profile,
+        done
+      ) {
+        try {
+          let user = await User.findByExternalID(provider, profile.id)
+          if (!user) {
+            user = await User.createUser(provider, profile)
+            console.log('created new user')
+          }
+          const token = user.generateAuthToken()
+          done(null, { user, token })
+        } catch (e) {
+          done(e)
+        }
+      })
+    )
+  }
 }
