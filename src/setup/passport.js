@@ -1,6 +1,7 @@
 import passport from 'passport'
 import passportGoogle from 'passport-google-oauth'
 import passportSteam from 'passport-steam'
+import passportDiscord from 'passport-discord'
 import User from './../models/user'
 
 function setupGoogleStrategy () {
@@ -21,13 +22,10 @@ function setupGoogleStrategy () {
       done
     ) {
       try {
-        let user = await User.findByExternalID(provider, profile.id)
-        if (!user) {
-          user = await User.createUser(provider, profile)
-          console.log('created new user')
-        }
-        const token = user.generateAuthToken()
-        done(null, { user, token })
+        const { id } = profile
+        const email = profile.emails[0].value
+        let user = await User.findOrCreate(email, id, provider, profile)
+        done(null, user)
       } catch (e) {
         done(e)
       }
@@ -51,16 +49,40 @@ function setupSteamStrategy () {
       done
     ) {
       try {
-        const { _json: { steamid } } = profile
-        let user = await User.findByExternalID(provider, steamid)
-        if (!user) {
-          user = await User.createUser(provider, profile)
-          console.log('created new user')
-        }
-        const token = user.generateAuthToken()
-        user = user.toJSON()
+        const {
+          _json: { steamid },
+        } = profile
 
-        done(null, { ...user, token })
+        let user = await User.findOrCreate(null, steamid, provider, profile)
+
+        done(null, user)
+      } catch (e) {
+        done(e)
+      }
+    })
+  )
+}
+
+function setupDiscordStrategy () {
+  const passportConfig = {
+    callbackURL: '/auth/discord/redirect',
+    clientID: process.env.DISCORD_CLIENTID,
+    clientSecret: process.env.DISCORD_CLIENTSECRET,
+  }
+
+  const provider = 'discord'
+
+  passport.use(
+    new passportDiscord.Strategy(passportConfig, async function (
+      accessToken,
+      refreshToken,
+      profile,
+      done
+    ) {
+      try {
+        const { email, id } = profile
+        let user = await User.findOrCreate(email, id, provider, profile)
+        done(null, user)
       } catch (e) {
         done(e)
       }
@@ -71,4 +93,5 @@ function setupSteamStrategy () {
 export default function () {
   setupGoogleStrategy()
   setupSteamStrategy()
+  setupDiscordStrategy()
 }

@@ -43,6 +43,11 @@ UserSchema.statics = {
       },
     })
   },
+  findByEmail (email) {
+    return User.findOne({
+      email,
+    })
+  },
   createUser (provider, profile) {
     let newUser
 
@@ -67,10 +72,36 @@ UserSchema.statics = {
           },
         ],
       }
+    } else if (provider === 'discord') {
+      newUser = {
+        username: profile.username,
+        email: profile.email,
+        providers: [
+          {
+            provider,
+            id: profile.id,
+          },
+        ],
+      }
     }
 
     const user = new User(newUser)
     return user.save()
+  },
+  async findOrCreate (email, id, provider, profile) {
+    try {
+      let user
+      if (email) user = await this.findByEmail(email)
+      if (!user) user = await this.findByExternalID(provider, id)
+      if (!user) {
+        user = await this.createUser(provider, profile)
+        console.log(`created new ${provider} user`)
+      }
+      const token = user.generateAuthToken()
+      return { user, token }
+    } catch (e) {
+      return Promise.reject(new Error(e))
+    }
   },
 }
 

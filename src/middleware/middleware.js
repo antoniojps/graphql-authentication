@@ -1,6 +1,7 @@
 import cors from 'cors'
 import passport from 'passport'
 import jwt from 'express-jwt'
+import { errSchema } from '../utils/responses'
 
 const authenticate = jwt({
   credentialsRequired: false,
@@ -17,11 +18,11 @@ function handleAuthError (err, req, res, next) {
 
 function handlePassportError (err, req, res, next) {
   if (err) {
-    let data = {
-      status: 'BAD REQUEST',
+    let data = {}
+    if (!(process.env.NODE_ENV === 'production')) {
+      data.err = err
+      res.status(500).send(errSchema(data, 500))
     }
-    if (!(process.env.NODE_ENV === 'production')) data.err = err
-    res.status(400).send(data)
   } else return next()
 }
 

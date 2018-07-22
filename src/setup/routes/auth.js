@@ -2,6 +2,7 @@ import { Router } from 'express'
 import './../passport'
 import passport from 'passport'
 import { handlePassportError } from './../../middleware/middleware'
+import { resSchema, errSchema } from './../../utils/responses'
 
 const router = Router()
 
@@ -9,7 +10,7 @@ router.get('/login', (req, res) => {
   res.send('Login')
 })
 
-// auth with google
+// GOOGLE
 router.get(
   '/google',
   passport.authenticate('google', {
@@ -18,16 +19,20 @@ router.get(
   })
 )
 
-// callback route for google to redirect to
 router.get(
   '/google/redirect',
-  passport.authenticate('google', { session: false }),
+  passport.authenticate('google', {
+    failureRedirect: process.env.CLIENT_LOGIN,
+    session: false,
+  }),
   handlePassportError,
   (req, res) => {
-    res.send({ user: req.user, token: req.token })
+    if (!req.user) res.status(404).send(errSchema('User not found', 404))
+    res.send(resSchema(req.user, res.statusCode))
   }
 )
 
+// STEAM
 router.get(
   '/steam',
   passport.authenticate('steam', {
@@ -37,14 +42,37 @@ router.get(
 
 router.get(
   '/steam/redirect',
-  passport.authenticate('steam', { session: false }),
+  passport.authenticate('steam', {
+    failureRedirect: process.env.CLIENT_LOGIN,
+    session: false,
+  }),
   handlePassportError,
   (req, res) => {
-    if (!req.user) res.status(404).send('NOT FOUND')
-    res.send({
-      results: { user: req.user },
-      status: 'OK',
-    })
+    if (!req.user) res.status(404).send(errSchema('User not found', 404))
+    res.send(resSchema(req.user, res.statusCode))
+  }
+)
+
+// DISCORD
+
+router.get(
+  '/discord',
+  passport.authenticate('discord', {
+    session: false,
+    scope: ['email', 'identify'],
+  })
+)
+
+router.get(
+  '/discord/redirect',
+  passport.authenticate('discord', {
+    failureRedirect: process.env.CLIENT_LOGIN,
+    session: false,
+  }),
+  handlePassportError,
+  (req, res) => {
+    if (!req.user) res.status(404).send(errSchema('User not found', 404))
+    res.send(resSchema(req.user, res.statusCode))
   }
 )
 
