@@ -3,10 +3,10 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development && nodemon src/index.js --exec babel-node",
+    "dev": "cross-env NODE_ENV=development nodemon src/index.js --exec babel-node",
     "clean": "rm -rf build && mkdir build",
     "build": "cross-env NODE_ENV=production npm run clean && babel -d ./build ./src -s --copy-files",
-    "start": "cross-env NODE_ENV=development && node server.js",
+    "start": "cross-env NODE_ENV=development node server.js",
     "eslint": "eslint src",
     "test": "cross-env NODE_ENV=test mocha --require babel-core/register src/tests/*.test.js",
     "test-watch": "nodemon --exec 'npm test'"
@@ -23,6 +23,7 @@
     "mongoose": "^5.2.4",
     "passport": "^0.4.0",
     "passport-google-oauth": "^1.0.0",
+    "passport-steam": "^1.0.10",
     "validator": "^10.4.0"
   },
   "devDependencies": {

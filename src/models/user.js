@@ -1,17 +1,15 @@
 import mongoose from 'mongoose'
 import validator from 'validator'
 import jsonwebtoken from 'jsonwebtoken'
-import _ from 'lodash'
 
 // USER
 // schema
 const UserSchema = mongoose.Schema({
   email: {
     type: String,
-    required: true,
     trim: true,
-    minlength: 1,
     unique: true,
+    sparse: true,
     validate: {
       validator: validator.isEmail,
       message: '{VALUE} is not a valid email',
@@ -20,8 +18,6 @@ const UserSchema = mongoose.Schema({
   username: {
     type: String,
     trim: true,
-    unique: true,
-    sparse: true,
   },
   providers: {
     type: [
@@ -32,6 +28,7 @@ const UserSchema = mongoose.Schema({
         id: {
           type: String,
         },
+        _id: false,
       },
     ],
   },
@@ -47,15 +44,31 @@ UserSchema.statics = {
     })
   },
   createUser (provider, profile) {
-    const newUser = {
-      email: profile.emails[0].value,
-      providers: [
-        {
-          provider,
-          id: profile.id,
-        },
-      ],
+    let newUser
+
+    if (provider === 'google') {
+      newUser = {
+        email: profile.emails[0].value,
+        providers: [
+          {
+            provider,
+            id: profile.id,
+          },
+        ],
+      }
+    } else if (provider === 'steam') {
+      profile = profile._json
+      newUser = {
+        username: profile.personaname,
+        providers: [
+          {
+            provider,
+            id: profile.steamid,
+          },
+        ],
+      }
     }
+
     const user = new User(newUser)
     return user.save()
   },
@@ -65,7 +78,7 @@ UserSchema.statics = {
 UserSchema.methods = {
   toJSON () {
     const userObj = this.toObject()
-    return _.pick(userObj, ['_id', 'email'])
+    return userObj
   },
 
   generateAuthToken () {

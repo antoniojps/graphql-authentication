@@ -10,14 +10,19 @@ const authenticate = jwt({
 })
 
 // Make Apollo Server handle the unauthenticated users and not Express
-const handleAuthError = (err, req, res, next) => {
+function handleAuthError (err, req, res, next) {
   if (err.code === 'invalid_token') return next()
   return next(err)
 }
 
-export {
-  cors,
-  passport,
-  authenticate,
-  handleAuthError,
+function handlePassportError (err, req, res, next) {
+  if (err) {
+    let data = {
+      status: 'BAD REQUEST',
+    }
+    if (!(process.env.NODE_ENV === 'production')) data.err = err
+    res.status(400).send(data)
+  } else return next()
 }
+
+export { cors, passport, authenticate, handleAuthError, handlePassportError }

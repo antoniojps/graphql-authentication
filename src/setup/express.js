@@ -3,7 +3,7 @@ import { cors, authenticate, handleAuthError, passport } from './../middleware/m
 import typeDefs from './../graphql/typeDefs'
 import resolvers from './../graphql/resolvers'
 import { ApolloServer } from 'apollo-server-express'
-import authRoutes from './routes/authentication'
+import authRoutes from './routes/auth'
 
 function setupGraphQL () {
   return new ApolloServer({
@@ -17,11 +17,13 @@ function setupGraphQL () {
 }
 
 function setupCors (app) {
-  app.use(cors())
+  app.use(cors({
+    origin: process.env.CLIENT_ORIGIN,
+  }))
 }
 
 function setupParsers (app) {
-  app.use(authenticate, handleAuthError)
+  app.use(process.env.GRAPHQL_ENDPOINT, authenticate, handleAuthError)
 }
 
 function setupPassport (app) {
@@ -43,7 +45,7 @@ function setupExpress () {
 
   // graphQL
   const server = setupGraphQL()
-  server.applyMiddleware({ app })
+  server.applyMiddleware({ app, path: process.env.GRAPHQL_ENDPOINT })
 
   app.listen({ port: process.env.PORT }, () =>
     console.info(`Server started on port ${process.env.PORT}`)
