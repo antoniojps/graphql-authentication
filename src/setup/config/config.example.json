@@ -6,7 +6,11 @@
     "JWT_AUDIENCE": "authentication-server",
     "JWT_ISSUER": "authentication-server",
     "GOOGLE_CLIENTID": "REPLACEclientID",
-    "GOOGLE_CLIENTSECRET": "REPLACEyourGoogleSecret"
+    "GOOGLE_CLIENTSECRET": "REPLACEyourGoogleSecret",
+    "STEAM_APIKEY": "REPLACEyourSteamApi",
+    "CLIENT_ORIGIN": "http://localhost:8080",
+    "PUBLIC_URL": "http://localhost:3000",
+    "GRAPHQL_ENDPOINT": "/graphql"
   },
   "development": {
     "PORT": 3000,
@@ -15,6 +19,10 @@
     "JWT_AUDIENCE": "authentication-server",
     "JWT_ISSUER": "authentication-server",
     "GOOGLE_CLIENTID": "REPLACEclientID",
-    "GOOGLE_CLIENTSECRET": "REPLACEyourGoogleSecret"
+    "GOOGLE_CLIENTSECRET": "REPLACEyourGoogleSecret",
+    "STEAM_APIKEY": "REPLACEyourSteamApi",
+    "CLIENT_ORIGIN": "http://localhost:8080",
+    "PUBLIC_URL": "http://localhost:3000",
+    "GRAPHQL_ENDPOINT": "/graphql"
   }
 }
