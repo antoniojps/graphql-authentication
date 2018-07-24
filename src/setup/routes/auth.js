@@ -27,7 +27,12 @@ router.get(
   }),
   handlePassportError,
   (req, res) => {
+    // todo redirect users to client accordingly
     if (!req.user) res.status(404).send(errSchema('User not found', 404))
+    res.cookie('token', req.user.token, {
+      expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      httpOnly: true,
+    })
     res.send(resSchema(req.user, res.statusCode))
   }
 )
