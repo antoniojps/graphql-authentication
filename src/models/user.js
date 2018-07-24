@@ -105,7 +105,6 @@ UserSchema.statics = {
         user = await this.createUser(provider, profile)
         console.log(`created new ${provider} user`)
       }
-      console.log(user)
       const token = user.generateAuthToken()
       return { user, token }
     } catch (e) {

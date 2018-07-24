@@ -15,8 +15,6 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Installing
 
-A step by step series of examples that tell you how to get a development env running
-
 Clone
 
 ```
@@ -49,7 +47,7 @@ To test if the authentication is working open any of the following routes:
 * Discord - /auth/discord
 * Steam - /auth/steam
 
-They should redirect you to the callback with the user data and token and a cookie is now set with the token
+They should redirect you to the callback with the user data and token; A cookie is now set with the token
 
 ## Running the tests
 
