@@ -37,14 +37,6 @@ function setupGraphQL () {
   })
 }
 
-function setupCors (app) {
-  app.use(
-    cors({
-      origin: process.env.CLIENT_ORIGIN,
-    })
-  )
-}
-
 function setupParsers (app) {
   app.use(cookieParser())
   app.use(process.env.GRAPHQL_ENDPOINT, jwtParser, handleJwtError)
@@ -62,14 +54,20 @@ function setupExpress () {
   const app = express()
 
   // express middleware
-  setupCors(app)
   setupParsers(app)
   setupPassport(app)
   setupRoutes(app)
 
   // graphQL
   const server = setupGraphQL()
-  server.applyMiddleware({ app, path: process.env.GRAPHQL_ENDPOINT })
+  server.applyMiddleware({
+    app,
+    path: process.env.GRAPHQL_ENDPOINT,
+    cors: {
+      origin: [process.env.CLIENT_ORIGIN],
+      credentials: true,
+    },
+  })
 
   app.listen({ port: process.env.PORT }, () =>
     console.info(`Server started on port ${process.env.PORT}`)

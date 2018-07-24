@@ -6,10 +6,6 @@ import { resSchema, errSchema } from './../../utils/responses'
 
 const router = Router()
 
-router.get('/login', (req, res) => {
-  res.send('Login')
-})
-
 // GOOGLE
 router.get(
   '/google',
@@ -64,7 +60,6 @@ router.get(
 )
 
 // DISCORD
-
 router.get(
   '/discord',
   passport.authenticate('discord', {
@@ -87,7 +82,8 @@ router.get(
       expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
       httpOnly: true,
     })
-    res.send(resSchema(req.user, res.statusCode))
+    // res.send(resSchema(req.user, res.statusCode))
+    res.redirect(process.env.CLIENT_ORIGIN)
   }
 )
 
