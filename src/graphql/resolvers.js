@@ -1,14 +1,11 @@
-import { AuthenticationError, ForbiddenError } from 'apollo-server-express'
+import { secure } from './../utils/filters'
 import User from './../models/user'
 
-const Query = {
-  users: (root, args, { user }) => {
-    // todo: set up user roles
-    if (!user) throw new AuthenticationError('Unauthorized')
-    return User.find()
+export default {
+  Query: {
+    users: secure(() => User.find(), true),
+    currentUser: secure((root, args, { user }) => {
+      return User.findById(user.id)
+    }),
   },
 }
-
-// const Mutation = {}
-
-export default { Query }

@@ -72,6 +72,11 @@ router.get(
   handlePassportError,
   (req, res) => {
     if (!req.user) res.status(404).send(errSchema('User not found', 404))
+    res.cookie('token', req.user.token, {
+      // // might be needed for subdomains
+      // domain: process.env.CLIENT_ORIGIN,
+      httpOnly: (process.env.NODE_ENV === 'production'),
+    })
     res.send(resSchema(req.user, res.statusCode))
   }
 )

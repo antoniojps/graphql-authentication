@@ -1,17 +1,22 @@
 import cors from 'cors'
+import cookieParser from 'cookie-parser'
 import passport from 'passport'
 import jwt from 'express-jwt'
 import { errSchema } from '../utils/responses'
 
-const authenticate = jwt({
+const jwtParser = jwt({
   credentialsRequired: false,
   secret: process.env.JWT_SECRET,
   audience: process.env.JWT_AUDIENCE,
   issuer: process.env.ISSUER,
+  getToken: req => {
+    if (req.cookies.token) return req.cookies.token
+    return null
+  },
 })
 
 // Make Apollo Server handle the unauthenticated users and not Express
-function handleAuthError (err, req, res, next) {
+function handleJwtError (err, req, res, next) {
   if (err.code === 'invalid_token') return next()
   return next(err)
 }
@@ -26,4 +31,11 @@ function handlePassportError (err, req, res, next) {
   } else return next()
 }
 
-export { cors, passport, authenticate, handleAuthError, handlePassportError }
+export {
+  cors,
+  cookieParser,
+  passport,
+  jwtParser,
+  handleJwtError,
+  handlePassportError,
+}

@@ -5,14 +5,22 @@ import jsonwebtoken from 'jsonwebtoken'
 const userOneID = new ObjectID()
 const userTwoID = new ObjectID()
 
-function generateAuthToken (id) {
+function generateAuthToken (id, admin, moderator) {
   const token = jsonwebtoken
-    .sign({}, process.env.JWT_SECRET, {
-      expiresIn: '24h',
-      audience: process.env.JWT_AUDIENCE,
-      issuer: process.env.JWT_ISSUER,
-      subject: id,
-    })
+    .sign(
+      {
+        id,
+        admin: !!admin,
+        moderator: !!moderator,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: '24h',
+        audience: process.env.JWT_AUDIENCE,
+        issuer: process.env.JWT_ISSUER,
+        subject: id,
+      }
+    )
     .toString()
   return token
 }
@@ -31,7 +39,7 @@ export const defaultUsers = [
 ]
 
 export const usersTokens = [
-  generateAuthToken(defaultUsers[0]._id.toHexString()),
+  generateAuthToken(defaultUsers[0]._id.toHexString(), true),
   generateAuthToken(defaultUsers[1]._id.toHexString()),
 ]
 

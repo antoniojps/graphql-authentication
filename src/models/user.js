@@ -19,6 +19,14 @@ const UserSchema = mongoose.Schema({
     type: String,
     trim: true,
   },
+  admin: {
+    type: Boolean,
+    default: false,
+  },
+  moderator: {
+    type: Boolean,
+    default: false,
+  },
   providers: {
     type: [
       {
@@ -97,6 +105,7 @@ UserSchema.statics = {
         user = await this.createUser(provider, profile)
         console.log(`created new ${provider} user`)
       }
+      console.log(user)
       const token = user.generateAuthToken()
       return { user, token }
     } catch (e) {
@@ -107,19 +116,28 @@ UserSchema.statics = {
 
 // instance methods
 UserSchema.methods = {
-  toJSON () {
+  toObj () {
     const userObj = this.toObject()
     return userObj
   },
 
   generateAuthToken () {
+    const user = this.toObj()
+
     const token = jsonwebtoken
-      .sign({}, process.env.JWT_SECRET, {
-        expiresIn: '24h',
-        audience: process.env.JWT_AUDIENCE,
-        issuer: process.env.JWT_ISSUER,
-        subject: this._id.toHexString(),
-      })
+      .sign(
+        {
+          id: user._id.toHexString(),
+          admin: !!user.admin,
+          moderator: !!user.moderator,
+        },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: '24h',
+          audience: process.env.JWT_AUDIENCE,
+          issuer: process.env.JWT_ISSUER,
+        }
+      )
       .toString()
     return token
   },
