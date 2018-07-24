@@ -57,7 +57,7 @@ If the above is done correctly running the tests should be as simple as:
 npm run test
 ```
 
-Make sure to the variables the test in the config file /src/setup/config/config.json
+Make sure to the test variables in the config file /src/setup/config/config.json are setup correctly
 
 ### Running coding style tests
 
@@ -69,7 +69,7 @@ npm run eslint
 
 ## Deployment
 
-Make sure you setup the production variables in the platform of your choise, the config,json file only defines variables for the 'development' and 'test' environments.
+Make sure you setup the production variables in the platform of your choise, the config.json file only defines variables for the 'development' and 'test' environments.
 
 Build the project with
 ```
