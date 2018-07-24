@@ -19,8 +19,21 @@ function setupGraphQL () {
       // todo: get user roles from db and add to user obj
       return { user: req.user }
     },
-    tracing: false,
+    tracing: true,
     cacheControl: true,
+    // playground not sending cookies? https://github.com/prismagraphql/graphql-playground/issues/748
+    playground: {
+      settings: {
+        'editor.theme': 'light',
+        'request.credentials': 'include',
+      },
+      tabs: [
+        {
+          endpoint: '/graphql',
+          query: '{ currentUser { email } }',
+        },
+      ],
+    },
   })
 }
 
