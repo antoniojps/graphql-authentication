@@ -7,7 +7,7 @@ const jwtParser = jwt({
   credentialsRequired: false,
   secret: process.env.JWT_SECRET,
   audience: process.env.JWT_AUDIENCE,
-  issuer: process.env.ISSUER,
+  issuer: process.env.JWT_ISSUER,
   getToken: req => {
     if (req.cookies.token) return req.cookies.token
     return null
