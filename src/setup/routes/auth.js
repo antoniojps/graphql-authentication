@@ -2,7 +2,7 @@ import { Router } from 'express'
 import './../passport'
 import passport from 'passport'
 import { handlePassportError } from './../../middleware/middleware'
-import { resSchema, errSchema } from './../../utils/responses'
+import { resSchema, errSchema } from './../../utils/schemas/responses'
 
 const router = Router()
 

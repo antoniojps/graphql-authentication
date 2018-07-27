@@ -1,4 +1,4 @@
-import { secure } from './../utils/filters'
+import { secure } from './../utils/filters/graphql'
 import User from './../models/user'
 
 export default {

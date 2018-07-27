@@ -1,8 +1,7 @@
-import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import passport from 'passport'
 import jwt from 'express-jwt'
-import { errSchema } from '../utils/responses'
+import { errSchema } from './../utils/schemas/responses'
 
 const jwtParser = jwt({
   credentialsRequired: false,
@@ -32,7 +31,6 @@ function handlePassportError (err, req, res, next) {
 }
 
 export {
-  cors,
   cookieParser,
   passport,
   jwtParser,
