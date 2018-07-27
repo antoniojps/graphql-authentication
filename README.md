@@ -81,8 +81,6 @@ You need to change the callback routes to redirect to your client in /setup/rout
 res.redirect(process.env.CLIENT_ORIGIN)
 ```
 
-Delete the
-
 Build the project with
 ```
 npm run build
