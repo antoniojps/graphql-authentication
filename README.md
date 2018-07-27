@@ -71,6 +71,18 @@ npm run eslint
 
 Make sure you setup the production variables in the platform of your choise, the config.json file only defines variables for the 'development' and 'test' environments.
 
+You need to change the callback routes to redirect to your client in /setup/routes/auth.js
+
+```
+// Replace this
+// res.send(resSchema(req.user, res.statusCode))
+
+// With
+res.redirect(process.env.CLIENT_ORIGIN)
+```
+
+Delete the
+
 Build the project with
 ```
 npm run build

@@ -82,8 +82,8 @@ router.get(
       expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
       httpOnly: true,
     })
-    // res.send(resSchema(req.user, res.statusCode))
-    res.redirect(process.env.CLIENT_ORIGIN)
+    res.send(resSchema(req.user, res.statusCode))
+    // res.redirect(process.env.CLIENT_ORIGIN)
   }
 )
 
