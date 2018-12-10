@@ -7,6 +7,7 @@ import {
 } from './../middleware/middleware'
 import typeDefs from './../graphql/typeDefs'
 import resolvers from './../graphql/resolvers'
+import { AuthDirective } from './../graphql/directives'
 import { ApolloServer } from 'apollo-server-express'
 import authRoutes from './routes/auth'
 
@@ -14,12 +15,20 @@ function setupGraphQL () {
   return new ApolloServer({
     typeDefs,
     resolvers,
+    schemaDirectives: {
+      auth: AuthDirective,
+    },
     context: ({ req }) => {
-      // todo: get user roles from db and add to user obj
       return { user: req.user }
     },
     tracing: true,
     cacheControl: true,
+    formatError: error => {
+      if (process.env.NODE_ENV === 'production') {
+        console.log(error)
+      }
+      return error
+    },
     // playground not sending cookies? https://github.com/prismagraphql/graphql-playground/issues/748
     playground: {
       settings: {

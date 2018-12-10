@@ -1,9 +1,11 @@
 import { ObjectID } from 'mongodb'
-import User from '../../models/user'
+import User from './../../models/user'
 import jsonwebtoken from 'jsonwebtoken'
 
 const userOneID = new ObjectID()
 const userTwoID = new ObjectID()
+const userThreeID = new ObjectID()
+const userFourID = new ObjectID()
 
 function generateAuthToken (id, admin, moderator) {
   const token = jsonwebtoken
@@ -25,28 +27,44 @@ function generateAuthToken (id, admin, moderator) {
   return token
 }
 
-export const defaultUsers = [
-  {
+export const defaultUsers = {
+  admin: {
     _id: userOneID,
     email: 'userOne@mail.com',
-    password: 'userOnePass',
+    username: 'admin',
   },
-  {
+  moderator: {
+    _id: userThreeID,
+    email: 'userThree@mail.com',
+    username: 'moderator',
+  },
+  normal: {
     _id: userTwoID,
     email: 'userTwo@mail.com',
+    username: 'normal',
     password: 'userTwoPass',
   },
-]
+  normalAlt: {
+    _id: userFourID,
+    email: 'userFour@mail.com',
+    username: 'normalFour',
+  },
+}
 
-export const usersTokens = [
-  generateAuthToken(defaultUsers[0]._id.toHexString(), true),
-  generateAuthToken(defaultUsers[1]._id.toHexString()),
-]
+export const usersTokens = {
+  admin: generateAuthToken(defaultUsers.admin._id.toHexString(), true),
+  moderator: generateAuthToken(defaultUsers.moderator._id.toHexString(), false, true),
+  normal: generateAuthToken(defaultUsers.normal._id.toHexString()),
+  normalAlt: generateAuthToken(defaultUsers.normalAlt._id.toHexString()),
+}
 
-export const populateUsers = done => {
-  User.remove().then(() => {
-    const userOne = new User(defaultUsers[0]).save()
-    const userTwo = new User(defaultUsers[1]).save()
-    Promise.all([userOne, userTwo]).then(() => done())
+export const populateUsers = () => {
+  return new Promise((resolve) => {
+    User.remove().then(() => {
+      const createUsers = Object.keys(defaultUsers).map(key => new User(defaultUsers[key]).save())
+      Promise.all(createUsers).then(() => {
+        resolve()
+      })
+    })
   })
 }
