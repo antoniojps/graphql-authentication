@@ -1,6 +1,14 @@
 # GraphQL Authentication with JWT
 
-Learning project to implement an OAuth 2.0 (Google & Discord) and OpenID (Steam) authentication with Passport & GraphQL with Apollo V2 over json web tokens.
+Example project to implement an OAuth 2.0 (Google) with Passport & GraphQL with Apollo V2 and Express over json web tokens.
+
+**Version 2** now with:
+
+* Graphql refactored schemas
+* Apollo V2
+* Babel 7
+* Jest (instead of Mocha)
+
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
@@ -10,8 +18,6 @@ These instructions will get you a copy of the project up and running on your loc
 * Node v10.4.1 or above
 * Mongo database
 * Google+ API Setup
-* Discord Application Setup
-* Steam Api Key
 
 ### Installing
 
@@ -44,8 +50,6 @@ npm run dev
 
 To test if the authentication is working open any of the following routes:
 * Google - /auth/google
-* Discord - /auth/discord
-* Steam - /auth/steam
 
 They should redirect you to the callback with the user data and token; A cookie is now set with the token
 
@@ -96,6 +100,7 @@ npm start
 * [Apollo Server](https://www.apollographql.com/docs/apollo-server/) - GraphQL API
 * [Passport](http://www.passportjs.org/) - OAuth 2.0 and OpenID Flow
 * [JWT](https://github.com/auth0/express-jwt) - Middleware that validates JsonWebToken
+* [Jest](https://github.com/facebook/jest) - Testing
 
 ## Authors
 
