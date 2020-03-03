@@ -2,6 +2,7 @@ import cookieParser from 'cookie-parser'
 import passport from 'passport'
 import jwt from 'express-jwt'
 import { errSchema } from './../utils/schemas/responses'
+import session from 'express-session'
 
 const jwtParser = jwt({
   credentialsRequired: false,
@@ -36,4 +37,5 @@ export {
   jwtParser,
   handleJwtError,
   handlePassportError,
+  session,
 }

@@ -1,5 +1,5 @@
 import { ObjectID } from 'mongodb'
-import User from './../../models/user'
+import User from './../../../models/user'
 import jsonwebtoken from 'jsonwebtoken'
 
 const userOneID = new ObjectID()
@@ -7,7 +7,7 @@ const userTwoID = new ObjectID()
 const userThreeID = new ObjectID()
 const userFourID = new ObjectID()
 
-function generateAuthToken (id, admin, moderator) {
+export function generateAuthToken (id, admin, moderator) {
   const token = jsonwebtoken
     .sign(
       {
@@ -53,15 +53,21 @@ export const defaultUsers = {
 
 export const usersTokens = {
   admin: generateAuthToken(defaultUsers.admin._id.toHexString(), true),
-  moderator: generateAuthToken(defaultUsers.moderator._id.toHexString(), false, true),
+  moderator: generateAuthToken(
+    defaultUsers.moderator._id.toHexString(),
+    false,
+    true
+  ),
   normal: generateAuthToken(defaultUsers.normal._id.toHexString()),
   normalAlt: generateAuthToken(defaultUsers.normalAlt._id.toHexString()),
 }
 
 export const populateUsers = () => {
-  return new Promise((resolve) => {
-    User.remove().then(() => {
-      const createUsers = Object.keys(defaultUsers).map(key => new User(defaultUsers[key]).save())
+  return new Promise(resolve => {
+    User.deleteMany({}).then(() => {
+      const createUsers = Object.keys(defaultUsers).map(key =>
+        new User(defaultUsers[key]).save()
+      )
       Promise.all(createUsers).then(() => {
         resolve()
       })

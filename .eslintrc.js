@@ -16,9 +16,16 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
     // Trailing comma
     'comma-dangle': ['error', 'always-multiline'],
-    'no-unused-vars': ['error', { varsIgnorePattern: 'expect' }],
+    'no-unused-vars': ['error', { varsIgnorePattern: '(React)' }],
   },
-  env: {
-    mocha: true,
+  plugins: ['jest'],
+  globals: {
+    expect: true,
+    test: true,
+    describe: true,
+    beforeEach: true,
+    afterEach: true,
+    afterAll: true,
+    React: true,
   },
 }

@@ -4,6 +4,7 @@ import {
   jwtParser,
   handleJwtError,
   passport,
+  session,
 } from './../middleware/middleware'
 import typeDefs from './../graphql/typeDefs'
 import resolvers from './../graphql/resolvers'
@@ -51,7 +52,18 @@ function setupParsers (app) {
 }
 
 function setupPassport (app) {
+  // necessary for OAuth 1.0 :(
+  // it ends up not being used at all
+  app.use(
+    session({
+      secret: 'keyboard cat',
+      resave: false,
+      saveUninitialized: false,
+      cookie: { secure: process.env.NODE_ENV === 'production' },
+    })
+  )
   app.use(passport.initialize())
+  app.use(passport.session())
 }
 
 function setupRoutes (app) {
@@ -77,10 +89,13 @@ function setupExpress () {
     },
   })
 
-  app.listen({ port: process.env.PORT }, () =>
+  const expressServer = app.listen({ port: process.env.PORT }, () =>
     console.info(`Server started on port ${process.env.PORT}`)
   )
-  return app
+  return {
+    app,
+    expressServer,
+  }
 }
 
 export default setupExpress

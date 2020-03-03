@@ -1,5 +1,5 @@
 {
-  "name": "authentication-server",
+  "name": "portal-ua-editor",
   "private": true,
   "license": "MIT",
   "scripts": {
@@ -8,34 +8,78 @@
     "build": "cross-env NODE_ENV=production npm run clean && babel -d ./build ./src -s --copy-files",
     "start": "node server.js",
     "eslint": "eslint src",
-    "test": "cross-env NODE_ENV=test mocha --require babel-core/register src/tests/*.test.js",
-    "test-watch": "nodemon --exec 'npm test'"
+    "test": "jest --runInBand --detectOpenHandles --forceExit",
+    "test:graphql": "jest src/__tests__/graphql/index.test.js --detectOpenHandles --watch",
+    "test:watch": "jest --watch",
+    "docs": "jsdoc2md src/parser/*.js > docs/parser-functions.md"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run eslint && npm test"
+    }
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "verbose": true,
+    "roots": [
+      "<rootDir>/src"
+    ],
+    "setupFiles": [
+      "<rootDir>/jest.init.js"
+    ],
+    "testMatch": [
+      "**/*.test.js"
+    ]
   },
   "dependencies": {
+    "@babel/polyfill": "^7.0.0",
+    "@okgrow/graphql-scalars": "^0.4.5",
     "apollo-server-express": "^2.0.0",
+    "clean-deep": "^3.0.2",
     "cookie-parser": "^1.4.3",
     "cors": "2.8.4",
+    "eslint-plugin-jest": "^22.3.0",
     "express": "4.16.3",
     "express-jwt": "5.3.1",
+    "express-session": "^1.16.2",
     "graphql": "^0.13.2",
+    "graphql-type-json": "^0.2.1",
     "http-status": "^1.2.0",
     "jsonwebtoken": "8.2.0",
-    "lodash": "^4.17.10",
+    "lodash.merge": "^4.6.2",
     "mongodb": "^3.1.1",
     "mongoose": "^5.2.4",
+    "mongoose-delete": "^0.5.1",
     "passport": "^0.4.0",
-    "passport-discord": "^0.1.3",
-    "passport-google-oauth": "^1.0.0",
-    "passport-steam": "^1.0.10",
+    "passport-google-oauth20": "^2.0.0",
     "validator": "^10.4.0"
   },
   "devDependencies": {
-    "babel-cli": "^6.24.1",
-    "babel-core": "^6.25.0",
-    "babel-eslint": "^8.2.1",
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-env": "^1.6.0",
-    "babel-preset-stage-0": "^6.24.1",
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.0.0",
+    "@babel/node": "^7.0.0",
+    "@babel/plugin-proposal-class-properties": "^7.0.0",
+    "@babel/plugin-proposal-decorators": "^7.0.0",
+    "@babel/plugin-proposal-do-expressions": "^7.0.0",
+    "@babel/plugin-proposal-export-default-from": "^7.0.0",
+    "@babel/plugin-proposal-export-namespace-from": "^7.0.0",
+    "@babel/plugin-proposal-function-bind": "^7.0.0",
+    "@babel/plugin-proposal-function-sent": "^7.0.0",
+    "@babel/plugin-proposal-json-strings": "^7.0.0",
+    "@babel/plugin-proposal-logical-assignment-operators": "^7.0.0",
+    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.0.0",
+    "@babel/plugin-proposal-numeric-separator": "^7.0.0",
+    "@babel/plugin-proposal-optional-chaining": "^7.0.0",
+    "@babel/plugin-proposal-pipeline-operator": "^7.0.0",
+    "@babel/plugin-proposal-throw-expressions": "^7.0.0",
+    "@babel/plugin-syntax-dynamic-import": "^7.0.0",
+    "@babel/plugin-syntax-import-meta": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/register": "^7.8.6",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-eslint": "^9.0.0",
+    "babel-jest": "^24.1.0",
     "cross-env": "^5.2.0",
     "eslint": "^4.2.0",
     "eslint-config-standard": "^10.2.1",
@@ -46,8 +90,9 @@
     "eslint-plugin-node": "^6.0.0",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
-    "expect": "^23.4.0",
-    "mocha": "^5.2.0",
+    "husky": "^1.3.1",
+    "jest": "^24.1.0",
+    "jsdoc-to-markdown": "^5.0.3",
     "nodemon": "^1.11.0",
     "supertest": "^3.1.0"
   }

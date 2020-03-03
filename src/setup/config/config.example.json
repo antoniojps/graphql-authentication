@@ -1,34 +1,41 @@
 {
   "test": {
     "PORT": 3000,
-    "MONGODB_URI": "mongodb://localhost:27017/PubgAppTest",
+    "MONGODB_URI": "mongodb://localhost:27017/Test",
     "JWT_SECRET": "superTESTsecret",
-    "JWT_AUDIENCE": "authentication-server",
-    "JWT_ISSUER": "authentication-server",
+    "JWT_AUDIENCE": "xxx-client",
+    "JWT_ISSUER": "xxx-server",
     "CLIENT_ORIGIN": "http://localhost:8080",
     "CLIENT_LOGIN": "http://localhost:8080/login",
     "PUBLIC_URL": "http://localhost:3000",
     "GRAPHQL_ENDPOINT": "/graphql",
     "GOOGLE_CLIENTID": "xxx",
-    "GOOGLE_CLIENTSECRET": "xxx",
-    "STEAM_APIKEY": "xxx",
-    "DISCORD_CLIENTID": "xxx",
-    "DISCORD_CLIENTSECRET": "xxx"
+    "GOOGLE_CLIENTSECRET": "xxx"
   },
   "development": {
     "PORT": 3000,
-    "MONGODB_URI": "mongodb://localhost:27017/PubgApp",
+    "MONGODB_URI": "mongodb://localhost:27017/Dev",
     "JWT_SECRET": "ohthisisevenmoresecret",
-    "JWT_AUDIENCE": "authentication-server",
-    "JWT_ISSUER": "authentication-server",
+    "JWT_AUDIENCE": "xxx-client",
+    "JWT_ISSUER": "xxx-server",
     "CLIENT_ORIGIN": "http://localhost:8080",
     "CLIENT_LOGIN": "http://localhost:8080/login",
     "PUBLIC_URL": "http://localhost:3000",
     "GRAPHQL_ENDPOINT": "/graphql",
     "GOOGLE_CLIENTID": "xxx",
-    "GOOGLE_CLIENTSECRET": "xxx",
-    "STEAM_APIKEY": "xxx",
-    "DISCORD_CLIENTID": "xxx",
-    "DISCORD_CLIENTSECRET": "xxx"
+    "GOOGLE_CLIENTSECRET": "xxx"
+  },
+  "production": {
+    "PORT": 3000,
+    "MONGODB_URI": "mongodb://localhost:27017/Prod",
+    "JWT_SECRET": "ohthisisevenmoresecret",
+    "JWT_AUDIENCE": "xxx-client",
+    "JWT_ISSUER": "xxx-server",
+    "CLIENT_ORIGIN": "http://localhost:8080",
+    "CLIENT_LOGIN": "http://localhost:8080/login",
+    "PUBLIC_URL": "http://localhost:3000",
+    "GRAPHQL_ENDPOINT": "/graphql",
+    "GOOGLE_CLIENTID": "xxx",
+    "GOOGLE_CLIENTSECRET": "xxx"
   }
 }

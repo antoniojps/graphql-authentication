@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import cors from 'cors'
 import './../passport'
 import passport from 'passport'
 import { handlePassportError } from './../../middleware/middleware'
@@ -23,67 +24,29 @@ router.get(
   }),
   handlePassportError,
   (req, res) => {
-    // todo redirect users to client accordingly
-    if (!req.user) res.status(404).send(errSchema('User not found', 404))
-    res.cookie('token', req.user.token, {
-      expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
-      httpOnly: true,
-    })
-    res.send(resSchema(req.user, res.statusCode))
+    if (!req.user) res.send(errSchema('User not found', 404))
+    if (req.user) {
+      res.cookie('token', req.user.token, {
+        // 1 week
+        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        httpOnly: true,
+      })
+    }
+    res.send(resSchema({ ...req.user }, 200))
+    // res.redirect(process.env.CLIENT_REDIRECT)
   }
 )
 
-// STEAM
 router.get(
-  '/steam',
-  passport.authenticate('steam', {
-    session: false,
-  })
-)
-
-router.get(
-  '/steam/redirect',
-  passport.authenticate('steam', {
-    failureRedirect: process.env.CLIENT_LOGIN,
-    session: false,
-  }),
-  handlePassportError,
+  '/logout',
+  cors({ origin: process.env.CLIENT_ORIGIN, credentials: true }),
   (req, res) => {
-    // todo redirect users to client accordingly
-    if (!req.user) res.status(404).send(errSchema('User not found', 404))
-    res.cookie('token', req.user.token, {
-      expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+    // 42 is the answer to life, the universe and everything
+    res.cookie('token', '', {
+      expires: new Date(Date.now() - 42),
       httpOnly: true,
     })
-    res.send(resSchema(req.user, res.statusCode))
-  }
-)
-
-// DISCORD
-router.get(
-  '/discord',
-  passport.authenticate('discord', {
-    session: false,
-    scope: ['email', 'identify'],
-  })
-)
-
-router.get(
-  '/discord/redirect',
-  passport.authenticate('discord', {
-    failureRedirect: process.env.CLIENT_LOGIN,
-    session: false,
-  }),
-  handlePassportError,
-  (req, res) => {
-    // todo redirect users to client accordingly
-    if (!req.user) res.status(404).send(errSchema('User not found', 404))
-    res.cookie('token', req.user.token, {
-      expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
-      httpOnly: true,
-    })
-    res.send(resSchema(req.user, res.statusCode))
-    // res.redirect(process.env.CLIENT_ORIGIN)
+    res.send(resSchema({ logout: true }, 200))
   }
 )
 

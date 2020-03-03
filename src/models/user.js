@@ -2,7 +2,6 @@ import mongoose from 'mongoose'
 import validator from 'validator'
 import jsonwebtoken from 'jsonwebtoken'
 import {
-  getDiscordAvatarFromProfile,
   setGoogleAvatarSize,
 } from './../utils/schemas/generators'
 
@@ -20,6 +19,14 @@ const UserSchema = mongoose.Schema({
     },
   },
   username: {
+    type: String,
+    trim: true,
+  },
+  name: {
+    type: String,
+    trim: true,
+  },
+  surname: {
     type: String,
     trim: true,
   },
@@ -94,43 +101,6 @@ UserSchema.statics = {
           large: setGoogleAvatarSize(profile.photos[0].value, 184),
         }
       }
-    } else if (provider === 'steam') {
-      profile = profile._json
-      newUser = {
-        username: profile.personaname,
-        providers: [
-          {
-            provider,
-            id: profile.steamid,
-          },
-        ],
-      }
-      if (profile.avatar) {
-        newUser.avatar = {
-          small: profile.avatar,
-          medium: profile.avatarmedium,
-          large: profile.avatarfull,
-        }
-      }
-    } else if (provider === 'discord') {
-      const avatar = getDiscordAvatarFromProfile(profile)
-      newUser = {
-        username: profile.username,
-        email: profile.email,
-        providers: [
-          {
-            provider,
-            id: profile.id,
-          },
-        ],
-      }
-      if (avatar) {
-        newUser.avatar = {
-          small: avatar,
-          medium: avatar,
-          large: avatar,
-        }
-      }
     }
     return newUser
   },
@@ -144,100 +114,14 @@ UserSchema.statics = {
       let user
       if (email) user = await this.findByEmail(email)
       if (!user) user = await this.findByExternalID(provider, id)
-      if (user) user = await this.updateAvatar(user, provider, profile)
       if (!user) {
         user = await this.createUser(provider, profile)
-        console.log(`created new ${provider} user: ${user.username}`)
       }
       const token = user.generateAuthToken()
       return { user, token }
     } catch (e) {
       return Promise.reject(new Error(e))
     }
-  },
-  async updateAvatar (user, provider, profile) {
-    if (provider === 'google') {
-      if (
-        profile.photos[0].value &&
-        user.avatar.small !== setGoogleAvatarSize(profile.photos[0].value, 32)
-      ) {
-        const avatar = {
-          small: setGoogleAvatarSize(profile.photos[0].value, 32),
-          medium: setGoogleAvatarSize(profile.photos[0].value, 64),
-          large: setGoogleAvatarSize(profile.photos[0].value, 184),
-        }
-        try {
-          const updatedUser = await this.findOneAndUpdate(
-            {
-              _id: user._id,
-            },
-            {
-              $set: { avatar },
-            },
-            {
-              new: true,
-            }
-          )
-          return updatedUser
-        } catch (e) {
-          Promise.reject(new Error(e))
-        }
-      }
-      return user
-    } else if (provider === 'steam') {
-      profile = profile._json
-      if (profile.avatar && user.avatar.small !== profile.avatar) {
-        const avatar = {
-          small: profile.avatar,
-          medium: profile.avatarmedium,
-          large: profile.avatarfull,
-        }
-        try {
-          const updatedUser = await this.findOneAndUpdate(
-            {
-              _id: user._id,
-            },
-            {
-              $set: { avatar },
-            },
-            {
-              new: true,
-            }
-          )
-          return updatedUser
-        } catch (e) {
-          Promise.reject(new Error(e))
-        }
-      }
-      return user
-    } else if (provider === 'discord') {
-      const newAvatar = getDiscordAvatarFromProfile(profile)
-      if (newAvatar && user.avatar.small !== newAvatar) {
-        const avatar = {
-          small: newAvatar,
-          medium: newAvatar,
-          large: newAvatar,
-        }
-        try {
-          const updatedUser = await this.findOneAndUpdate(
-            {
-              _id: user._id,
-            },
-            {
-              $set: { avatar },
-            },
-            {
-              new: true,
-            }
-          )
-          return updatedUser
-        } catch (e) {
-          Promise.reject(new Error(e))
-        }
-      }
-      return user
-    }
-    return user
   },
 }
 

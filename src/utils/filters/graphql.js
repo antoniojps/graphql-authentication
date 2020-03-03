@@ -1,4 +1,9 @@
-import { AuthenticationError, ForbiddenError } from 'apollo-server-express'
+import {
+  AuthenticationError,
+  ForbiddenError,
+  ApolloError,
+} from 'apollo-server-express'
+import status from 'http-status'
 
 export function secure (func, admin = false, moderator = false) {
   return (root, args, context) => {
@@ -6,11 +11,12 @@ export function secure (func, admin = false, moderator = false) {
     // admin only
     if (admin && !moderator && !context.user.admin) {
       throw new ForbiddenError('Unauthorized')
-    // admin or moderator only
+      // admin or moderator only
     } else if (
       admin &&
       moderator &&
-      (!context.user.admin && !context.user.moderator)) {
+      (!context.user.admin && !context.user.moderator)
+    ) {
       throw new ForbiddenError('Unauthorized')
     }
     return func(root, args, context)
@@ -70,4 +76,30 @@ export async function paginate (Model, query, pagination) {
     edges,
     pageInfo,
   }
+}
+
+// primitive type scalar validation
+
+export function isPrimitiveType (value) {
+  const type = typeof value
+  switch (type) {
+    case 'string':
+      return true
+    case 'boolean':
+      return true
+    case 'number':
+      return true
+    case 'object':
+      return true
+    default:
+      return false
+  }
+}
+
+export function StatusError (code, message) {
+  if (process.env.NODE_ENV === 'production') {
+    return new ApolloError(status[code], code)
+  }
+  if (message) return new ApolloError(message, code)
+  return new ApolloError(status[code], code)
 }

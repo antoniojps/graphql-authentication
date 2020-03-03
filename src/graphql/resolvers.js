@@ -1,12 +1,30 @@
-import { secure } from './../utils/filters/graphql'
-import User from './../models/user'
+import merge from 'lodash.merge'
+import { resolvers as UserResolvers } from './schemas/user'
 
-export default {
-  Query: {
-    users: secure(() => User.find(), true),
-    user: (root, { id }) => User.findById(id),
-    currentUser: secure((root, args, { user }) => {
-      return User.findById(user.id)
-    }),
-  },
+import {
+  DateTime,
+  PositiveInt,
+  EmailAddress,
+  URL,
+} from '@okgrow/graphql-scalars'
+import jsonScalar from 'graphql-type-json'
+
+const setupResolvers = {
+  // scalars
+  DateTime,
+  PositiveInt,
+  EmailAddress,
+  URL,
+  JSON: jsonScalar,
+
+  Query: {},
+
+  Mutation: {},
 }
+
+const resolvers = merge(
+  setupResolvers,
+  UserResolvers,
+)
+
+export default resolvers
