@@ -34,7 +34,7 @@
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
     "@okgrow/graphql-scalars": "^0.4.5",
-    "apollo-server-express": "^2.0.0",
+    "apollo-server-express": "^2.14.2",
     "clean-deep": "^3.0.2",
     "cookie-parser": "^1.4.3",
     "cors": "2.8.4",
