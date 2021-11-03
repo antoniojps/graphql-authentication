@@ -52,7 +52,7 @@
     "mongoose-delete": "^0.5.1",
     "passport": "^0.4.0",
     "passport-google-oauth20": "^2.0.0",
-    "validator": "^10.4.0"
+    "validator": "^13.7.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",
